@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Έχω στόμα δυνατό! - Δρ. Νίκος Ελευθεριάδης</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #E0F7FA;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #00BCD4;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #splash-screen .app-title { font-size: 50px; font-weight: 900; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        #splash-screen .doctor-name { font-size: 36px; font-weight: bold; margin-bottom: 10px; }
+        #splash-screen .doctor-spec { font-size: 24px; font-weight: 300; opacity: 0.9; }
+
+        .skip-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #container {
+            text-align: center;
+            background: white;
+            padding: 30px 25px;
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 85%;
+            max-width: 440px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .graphic-container {
+            width: 240px; height: 240px;
+            margin: 20px auto;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #label-text { font-size: 28px; color: #00838F; font-weight: bold; margin-bottom: 5px; }
+        #instruction-text { font-size: 22px; color: #D32F2F; font-weight: bold; margin-bottom: 15px; }
+        
+        #progress-container {
+            width: 80%; height: 14px; background-color: #EEE;
+            border-radius: 10px; margin-bottom: 10px;
+            overflow: hidden; border: 2px solid #00BCD4;
+        }
+        #progress-bar { width: 0%; height: 100%; background-color: #00BCD4; transition: width 0.1s linear; }
+
+        #timer { font-size: 65px; color: #FF5722; font-weight: 900; }
+
+        .external-controls {
+            margin-top: 25px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            z-index: 20;
+        }
+
+        .btn-round {
+            background-color: #4CAF50;
+            color: white; border: none; border-radius: 50%;
+            width: 80px; height: 80px; font-size: 35px;
+            cursor: pointer; box-shadow: 0 6px 0 #388E3C;
+            display: flex; align-items: center; justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-round:active { transform: translateY(4px); box-shadow: 0 2px 0 #388E3C; }
+
+        .controls-row { display: flex; gap: 20px; }
+
+        .main-app-title { font-size: 32px; color: #006064; font-weight: 900; margin-bottom: 50px; margin-top: 10px; }
+        h1 { font-size: 22px; color: #00838F; margin: 0 0 15px 0; }
+        label { display: block; font-size: 16px; color: #00838F; font-weight: bold; margin-top: 10px; }
+        
+        input[type="number"], input[type="text"] {
+            padding: 12px; font-size: 20px; width: 70%;
+            margin-top: 5px; border-radius: 15px;
+            border: 3px solid #B2EBF2; text-align: center; font-weight: bold;
+            outline: none;
+        }
+
+        .icon-selector { display: flex; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        .icon-option {
+            width: 75px; height: 75px; border: 3px solid #F0F0F0; border-radius: 20px; cursor: pointer; font-size: 38px;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+            background: #FFFFFF; filter: grayscale(100%); opacity: 0.4;
+        }
+        .icon-option.selected { border-color: #00BCD4; background: #E0F7FA; transform: scale(1.1); filter: grayscale(0%); opacity: 1; }
+
+        .start-btn { padding: 15px 45px; font-size: 20px; background-color: #00BCD4; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; box-shadow: 0 6px 0 #0097A7; margin-top: 25px; }
+
+        .balloon { position: absolute; bottom: -100px; font-size: 60px; animation: floatUp 4s linear forwards; pointer-events: none; z-index: 5; }
+        @keyframes floatUp { to { transform: translateY(-120vh); } }
+    </style>
+</head>
+<body>
+
+<div id="splash-screen">
+    <div class="app-title">Έχω στόμα δυνατό!</div>
+    <div class="doctor-name">Δρ. Νίκος Ελευθεριάδης</div>
+    <div class="doctor-spec">Ωτορινολαρυγγολόγος-Παιδοακουολόγος</div>
+    <button class="skip-btn" onclick="hideSplash()">παράλειψη ➜</button>
+</div>
+
+<div id="container">
+    <div id="screen-name" style="width:100%">
+        <div class="main-app-title">Έχω στόμα δυνατό!</div>
+        <h1>πώς σε λένε;</h1>
+        <input type="text" id="child-name" placeholder="..." autocomplete="off">
+        <br>
+        <button class="start-btn" onclick="goToSettings()">επόμενο</button>
+    </div>
+
+    <div id="screen-settings" style="display:none; width:100%">
+        <h1>ρυθμίσεις</h1>
+        <label>διάλεξε εικονίδια:</label>
+        <div class="icon-selector" id="icon-selector-ui">
+            <div class="icon-option" data-id="lion">🦁</div>
+            <div class="icon-option" data-id="boy">👦</div>
+            <div class="icon-option" data-id="cabinet">🗄️</div>
+            <div class="icon-option" data-id="dog">🐶</div>
+            <div class="icon-option" data-id="cat">🐱</div>
+        </div>
+        <label>ανοιχτό (δευτ.):</label>
+        <input type="number" id="open-time" value="3" min="1">
+        <label>κλειστό (δευτ.):</label>
+        <input type="number" id="closed-time" value="5" min="1">
+        <label>επαναλήψεις:</label>
+        <input type="number" id="repeats" value="1" min="1">
+        <br>
+        <button class="start-btn" onclick="prepareExercise()">πάμε</button>
+    </div>
+
+    <div id="screen-exercise" style="display:none; width:100%">
+        <div id="label-text"></div>
+        <div id="visual-aid" class="graphic-container"></div>
+        <div id="instruction-text"></div>
+        <div id="progress-container" style="margin: 0 auto 10px;"><div id="progress-bar"></div></div>
+        <div id="timer"></div>
+    </div>
+</div>
+
+<div class="external-controls">
+    <button id="next-btn" class="btn-round" style="display:none;" onclick="handleNext()">➜</button>
+    <div id="end-controls" class="controls-row" style="display:none;">
+        <button class="btn-round" onclick="fastRestart()">🔄</button>
+        <button class="btn-round" onclick="fastSettings()" style="background-color: #FF9800; box-shadow: 0 6px 0 #E65100;">⚙️</button>
+        <button class="btn-round" onclick="fastHome()" style="background-color: #2196F3; box-shadow: 0 6px 0 #0D47A1;">🏠</button>
+    </div>
+</div>
+
+<script>
+    let splashTimeout = setTimeout(hideSplash, 5000);
+
+    function hideSplash() {
+        clearTimeout(splashTimeout);
+        document.getElementById('splash-screen').style.display = 'none';
+        document.getElementById('container').style.display = 'flex';
+    }
+
+    /* ΑΚΑΡΙΑΙΑ ΚΟΥΜΠΙΑ ΤΕΛΟΥΣ */
+    function clearBalloons() {
+        document.querySelectorAll('.balloon').forEach(b => b.remove());
+    }
+
+    function fastRestart() {
+        clearBalloons();
+        prepareExercise();
+    }
+
+    function fastSettings() {
+        clearBalloons();
+        document.getElementById('screen-exercise').style.display = 'none';
+        document.getElementById('end-controls').style.display = 'none';
+        document.getElementById('screen-settings').style.display = 'block';
+    }
+
+    function fastHome() {
+        clearBalloons();
+        goToHome();
+    }
+
+    document.querySelectorAll('.icon-option').forEach(opt => {
+        opt.onclick = function() { this.classList.toggle('selected'); }
+    });
+
+    const shapes = {
+        lion: { open: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#BF360C"/><circle cx="50" cy="53" r="38" fill="#FFA502"/><circle cx="50" cy="53" r="28" fill="#FFC870"/><circle cx="50" cy="70" r="7" fill="#742A00"/><circle cx="38" cy="45" r="4" fill="black"/><circle cx="62" cy="45" r="4" fill="black"/></svg>`, closed: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#BF360C"/><circle cx="50" cy="53" r="38" fill="#FFA502"/><circle cx="50" cy="53" r="28" fill="#FFC870"/><path d="M42 70 Q50 76 58 70" fill="none" stroke="#742A00" stroke-width="4" stroke-linecap="round"/><circle cx="38" cy="45" r="4" fill="black"/><circle cx="62" cy="45" r="4" fill="black"/></svg>`, label: "λιοντάρι" },
+        boy: { open: `<svg viewBox="0 0 100 100"><circle cx="12" cy="45" r="7" fill="#FFE0BD"/><circle cx="88" cy="45" r="7" fill="#FFE0BD"/><path d="M10 40 Q50 -10 90 40 L90 20 Q50 -20 10 20 Z" fill="#4E342E"/><rect x="15" y="0" width="70" height="25" rx="10" fill="#4E342E"/><circle cx="50" cy="45" r="40" fill="#FFE0BD"/><circle cx="35" cy="40" r="3" fill="black"/><circle cx="65" cy="40" r="3" fill="black"/><circle cx="50" cy="68" r="8" fill="#800000"/></svg>`, closed: `<svg viewBox="0 0 100 100"><circle cx="12" cy="45" r="7" fill="#FFE0BD"/><circle cx="88" cy="45" r="7" fill="#FFE0BD"/><path d="M10 40 Q50 -10 90 40 L90 20 Q50 -20 10 20 Z" fill="#4E342E"/><rect x="15" y="0" width="70" height="25" rx="10" fill="#4E342E"/><circle cx="50" cy="45" r="40" fill="#FFE0BD"/><path d="M40 68 Q50 74 60 68" fill="none" stroke="#800000" stroke-width="3" stroke-linecap="round"/><circle cx="35" cy="40" r="3" fill="black"/><circle cx="65" cy="40" r="3" fill="black"/></svg>`, label: "παιδάκι" },
+        cabinet: { open: `<svg viewBox="0 0 100 100"><rect x="20" y="10" width="60" height="80" rx="5" fill="#A1887F" stroke="#5D4037" stroke-width="2"/><rect x="15" y="20" width="70" height="20" rx="3" fill="#D7CCC8" stroke="#5D4037" stroke-width="2"/><rect x="20" y="25" width="60" height="10" rx="2" fill="#8D6E63" stroke="#5D4037" stroke-width="1"/><circle cx="50" cy="30" r="3" fill="#5D4037"/><rect x="25" y="45" width="50" height="20" rx="3" fill="#BCAAA4" stroke="#5D4037" stroke-width="1"/><circle cx="50" cy="55" r="3" fill="#5D4037"/></svg>`, closed: `<svg viewBox="0 0 100 100"><rect x="20" y="10" width="60" height="80" rx="5" fill="#A1887F" stroke="#5D4037" stroke-width="2"/><rect x="25" y="20" width="50" height="20" rx="3" fill="#BCAAA4" stroke="#5D4037" stroke-width="1"/><circle cx="50" cy="30" r="3" fill="#5D4037"/><rect x="25" y="45" width="50" height="20" rx="3" fill="#BCAAA4" stroke="#5D4037" stroke-width="1"/><circle cx="50" cy="55" r="3" fill="#5D4037"/></svg>`, label: "συρτάρι" },
+        dog: { open: `<svg viewBox="0 0 100 100"><path d="M25 40 Q25 15 50 15 Q75 15 75 40 L75 75 Q75 90 50 90 Q25 90 25 75 Z" fill="#D7B191"/><path d="M25 30 Q15 30 15 65 Q15 80 25 75 Z" fill="#8D6E63"/><path d="M75 30 Q85 30 85 65 Q85 80 75 75 Z" fill="#8D6E63"/><circle cx="40" cy="40" r="4" fill="black"/><circle cx="60" cy="40" r="4" fill="black"/><path d="M45 50 L55 50 L50 55 Z" fill="black"/><path d="M40 68 Q50 88 60 68" fill="#800000" stroke="#4E342E" stroke-width="2"/><path d="M46 78 Q50 86 54 78" fill="#FF80AB"/></svg>`, closed: `<svg viewBox="0 0 100 100"><path d="M25 40 Q25 15 50 15 Q75 15 75 40 L75 75 Q75 90 50 90 Q25 90 25 75 Z" fill="#D7B191"/><path d="M25 30 Q15 30 15 65 Q15 80 25 75 Z" fill="#8D6E63"/><path d="M75 30 Q85 30 85 65 Q85 80 75 75 Z" fill="#8D6E63"/><circle cx="40" cy="40" r="4" fill="black"/><circle cx="60" cy="40" r="4" fill="black"/><path d="M45 50 L55 50 L50 55 Z" fill="black"/><path d="M40 68 Q50 73 60 68" fill="none" stroke="#4E342E" stroke-width="3" stroke-linecap="round"/></svg>`, label: "σκυλάκι" },
+        cat: { open: `<svg viewBox="0 0 100 100"><path d="M20 45 Q20 15 50 15 Q80 15 80 45 L80 75 Q80 95 50 95 Q20 95 20 75 Z" fill="#B0BEC5"/><path d="M25 30 L10 5 L35 20 Z" fill="#B0BEC5"/><path d="M75 30 L90 5 L65 20 Z" fill="#B0BEC5"/><circle cx="38" cy="50" r="5" fill="black"/><circle cx="62" cy="50" r="5" fill="black"/><path d="M48 60 L52 60 L50 64 Z" fill="#455A64"/><path d="M30 65 Q10 70 10 55 M30 65 Q10 75 15 60" fill="none" stroke="#455A64" stroke-width="1.5"/><path d="M70 65 Q90 70 90 55 M70 65 Q90 75 85 60" fill="none" stroke="#455A64" stroke-width="1.5"/><path d="M40 75 Q50 90 60 75" fill="#800000" stroke="#455A64" stroke-width="2"/><path d="M45 82 Q50 88 55 82" fill="#FF80AB"/></svg>`, closed: `<svg viewBox="0 0 100 100"><path d="M20 45 Q20 15 50 15 Q80 15 80 45 L80 75 Q80 95 50 95 Q20 95 20 75 Z" fill="#B0BEC5"/><path d="M25 30 L10 5 L35 20 Z" fill="#B0BEC5"/><path d="M75 30 L90 5 L65 20 Z" fill="#B0BEC5"/><circle cx="38" cy="50" r="5" fill="black"/><circle cx="62" cy="50" r="5" fill="black"/><path d="M48 60 L52 60 L50 64 Z" fill="#455A64"/><path d="M30 65 Q10 70 10 55 M30 65 Q10 75 15 60" fill="none" stroke="#455A64" stroke-width="1.5"/><path d="M70 65 Q90 70 90 55 M70 65 Q90 75 85 60" fill="none" stroke="#455A64" stroke-width="1.5"/><path d="M40 75 Q50 78 60 75" fill="none" stroke="#455A64" stroke-width="3" stroke-linecap="round"/></svg>`, label: "γατούλα" }
+    };
+
+    let flow = [], currentStep = 0, userName = "";
+
+    function goToHome() {
+        document.getElementById('screen-exercise').style.display = 'none';
+        document.getElementById('screen-settings').style.display = 'none';
+        document.getElementById('end-controls').style.display = 'none';
+        document.getElementById('screen-name').style.display = 'block';
+    }
+
+    function goToSettings() {
+        userName = document.getElementById('child-name').value.trim();
+        document.getElementById('screen-name').style.display = 'none';
+        document.getElementById('screen-settings').style.display = 'block';
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function prepareExercise() {
+        const selectedElements = document.querySelectorAll('.icon-option.selected');
+        const selectedIds = Array.from(selectedElements).map(el => el.getAttribute('data-id'));
+        if (selectedIds.length === 0) { alert("Διάλεξε εικονίδια!"); return; }
+        
+        currentStep = 0;
+        const tOpen = Math.max(1, parseInt(document.getElementById('open-time').value) || 1);
+        const tClosed = Math.max(1, parseInt(document.getElementById('closed-time').value) || 1);
+        const reps = Math.max(1, parseInt(document.getElementById('repeats').value) || 1);
+        
+        let baseFlow = selectedIds.map(id => ({ htmlOpen: shapes[id].open, htmlClosed: shapes[id].closed, label: shapes[id].label }));
+        const shuffledBase = shuffleArray([...baseFlow]);
+        
+        flow = [];
+        for(let i=0; i<reps; i++) {
+            shuffledBase.forEach(pair => {
+                flow.push({html: pair.htmlOpen, time: tOpen, autoNext: true, label: pair.label, instruction: "άνοιξε το στόμα!"});
+                flow.push({html: pair.htmlClosed, time: tClosed, autoNext: false, label: pair.label, instruction: "κλείσε το στόμα!"});
+            });
+        }
+        document.getElementById('screen-settings').style.display = 'none';
+        document.getElementById('screen-exercise').style.display = 'block';
+        document.getElementById('end-controls').style.display = 'none';
+        document.getElementById('progress-container').style.display = 'block';
+        runStep();
+    }
+
+    function runStep() {
+        const step = flow[currentStep];
+        document.getElementById('visual-aid').innerHTML = step.html;
+        document.getElementById('label-text').innerText = step.label;
+        document.getElementById('instruction-text').innerText = step.instruction;
+        document.getElementById('next-btn').style.display = 'none';
+        
+        let duration = step.time * 1000;
+        let start = Date.now();
+        const interval = setInterval(() => {
+            let elapsed = Date.now() - start;
+            let progress = (elapsed / duration) * 100;
+            let remaining = Math.ceil((duration - elapsed) / 1000);
+            document.getElementById('progress-bar').style.width = Math.min(progress, 100) + '%';
+            document.getElementById('timer').innerText = remaining > 0 ? remaining : "🌟";
+            if (elapsed >= duration) {
+                clearInterval(interval);
+                if (step.autoNext) setTimeout(handleNext, 600);
+                else document.getElementById('next-btn').style.display = 'flex';
+            }
+        }, 50);
+    }
+
+    function handleNext() {
+        currentStep++;
+        if (currentStep < flow.length) runStep();
+        else showFinish();
+    }
+
+    function showFinish() {
+        const msg = userName ? `μπράβο<br>${userName}!` : "μπράβο!";
+        document.getElementById('label-text').innerText = "";
+        document.getElementById('instruction-text').innerText = "";
+        document.getElementById('visual-aid').innerHTML = `<h1 style="font-size:38px; line-height:1.2;">${msg}</h1>`;
+        document.getElementById('timer').innerText = "🏆";
+        document.getElementById('progress-container').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('end-controls').style.display = 'flex';
+        
+        for(let i=0; i<25; i++) setTimeout(spawnBalloon, i * 150);
+    }
+
+    function spawnBalloon() {
+        const b = document.createElement('div');
+        b.className = 'balloon';
+        b.innerText = ['🎈','🎉','✨'][Math.floor(Math.random()*3)];
+        b.style.left = Math.random() * 85 + 'vw';
+        document.body.appendChild(b);
+        setTimeout(() => { if(b.parentNode) b.remove(); }, 4000);
+    }
+</script>
+</body>
+</html>
