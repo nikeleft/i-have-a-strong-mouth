@@ -35,20 +35,19 @@
 
         #splash-screen .app-title { font-size: 50px; font-weight: 900; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
         #splash-screen .doctor-name { font-size: 36px; font-weight: bold; margin-bottom: 10px; }
-        #splash-screen .doctor-spec { font-size: 24px; font-weight: 300; opacity: 0.9; }
+        #splash-screen .doctor-spec { font-size: 24px; font-weight: 300; opacity: 0.9; margin-bottom: 30px; }
 
         .skip-btn {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 16px;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 18px;
             cursor: pointer;
+            transition: background 0.3s;
         }
+        .skip-btn:active { background: rgba(255, 255, 255, 0.4); }
 
         #container {
             text-align: center;
@@ -116,7 +115,15 @@
             outline: none;
         }
 
-        .icon-selector { display: flex; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        /* Διάταξη εικονιδίων 3 πάνω - 2 κάτω */
+        .icon-selector { 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+            margin: 20px auto; 
+            flex-wrap: wrap;
+            max-width: 280px; /* Περιορίζει το πλάτος για να σπάει στα 3 */
+        }
         .icon-option {
             width: 75px; height: 75px; border: 3px solid #F0F0F0; border-radius: 20px; cursor: pointer; font-size: 38px;
             display: flex; align-items: center; justify-content: center; transition: all 0.2s;
@@ -195,7 +202,6 @@
         document.getElementById('container').style.display = 'flex';
     }
 
-    /* ΑΚΑΡΙΑΙΑ ΚΟΥΜΠΙΑ ΤΕΛΟΥΣ */
     function clearBalloons() {
         document.querySelectorAll('.balloon').forEach(b => b.remove());
     }
