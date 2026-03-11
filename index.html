@@ -33,9 +33,10 @@
             padding: 20px;
         }
 
-        #splash-screen .app-title { font-size: 50px; font-weight: 900; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        #splash-screen .doctor-name { font-size: 36px; font-weight: bold; margin-bottom: 10px; }
-        #splash-screen .doctor-spec { font-size: 24px; font-weight: 300; opacity: 0.9; margin-bottom: 30px; }
+        #splash-screen .app-title { font-size: 42px; font-weight: 900; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        /* Μικρότερη γραμματοσειρά για να μην ξεχειλίζει */
+        #splash-screen .doctor-name { font-size: 24px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; }
+        #splash-screen .doctor-spec { font-size: 18px; font-weight: 300; opacity: 0.9; margin-bottom: 30px; }
 
         .skip-btn {
             background: rgba(255, 255, 255, 0.2);
@@ -47,7 +48,6 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        .skip-btn:active { background: rgba(255, 255, 255, 0.4); }
 
         #container {
             text-align: center;
@@ -98,13 +98,11 @@
             width: 80px; height: 80px; font-size: 35px;
             cursor: pointer; box-shadow: 0 6px 0 #388E3C;
             display: flex; align-items: center; justify-content: center;
-            -webkit-tap-highlight-color: transparent;
         }
-        .btn-round:active { transform: translateY(4px); box-shadow: 0 2px 0 #388E3C; }
 
         .controls-row { display: flex; gap: 20px; }
 
-        .main-app-title { font-size: 32px; color: #006064; font-weight: 900; margin-bottom: 50px; margin-top: 10px; }
+        .main-app-title { font-size: 32px; color: #006064; font-weight: 900; margin-bottom: 40px; margin-top: 10px; }
         h1 { font-size: 22px; color: #00838F; margin: 0 0 15px 0; }
         label { display: block; font-size: 16px; color: #00838F; font-weight: bold; margin-top: 10px; }
         
@@ -115,14 +113,13 @@
             outline: none;
         }
 
-        /* Διάταξη εικονιδίων 3 πάνω - 2 κάτω */
         .icon-selector { 
             display: flex; 
             justify-content: center; 
             gap: 12px; 
             margin: 20px auto; 
             flex-wrap: wrap;
-            max-width: 280px; /* Περιορίζει το πλάτος για να σπάει στα 3 */
+            max-width: 280px; 
         }
         .icon-option {
             width: 75px; height: 75px; border: 3px solid #F0F0F0; border-radius: 20px; cursor: pointer; font-size: 38px;
